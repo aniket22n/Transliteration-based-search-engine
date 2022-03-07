@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %} Home Page {% endblock %}
+{% block content %}
+<p>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+<div class="alert alert-primary">
+    <strong>{{ message }}</strong>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+</p>
+<form method="post" action="/upload" enctype="multipart/form-data">
+    <p>File Name : <input type="text" name="txtusername" value="" placeholder="Enter file name" required> </p>
+    <p><input type="file" name="inputFile" autocomplete="off" required onchange="loadFile(event)"></p>
+    <p><input type="submit" value="Submit"></p>
+</form>
+<script>
+  var loadFile = function(event) {
+    var output = document.getElementById('output');
+    output.src = URL.createObjectURL(event.target.files[0]);
+    output.onload = function() {
+      URL.revokeObjectURL(output.src) 
+    }
+  };
+</script>
+{% endblock %}
