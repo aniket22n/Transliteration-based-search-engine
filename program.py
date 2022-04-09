@@ -3,13 +3,20 @@ from flask import Flask, jsonify, render_template, redirect, url_for, request, f
 # from flask_mongoengine import MongoEngine
 from flask_pymongo import PyMongo
 from pymongo import MongoClient
+
 from werkzeug.utils import secure_filename
 import os
 import PyPDF2
 from PyPDF2 import PdfFileReader
-import PIL
-from PIL import Image
+
+import PIL 
+from PIL import Image, ImageDraw
+import spacy
 import pytesseract as pt
+from pdf2image import convert_from_path
+
+from indic_transliteration import sanscript
+from indic_transliteration.sanscript import transliterate
 # import easyocr
 # import cv2 as cv
 #import urllib.request
@@ -59,14 +66,16 @@ def upload():
         #    usersave = User(file_name=file.filename) #calling user class
         #    usersave.save() #to save file name in db
         if '.' in filename and filename.rsplit('.', 1)[1].lower() == "pdf": #checking whether the  file is pdf or not  
-            f = open("C:\\Users\\ap888\\Desktop\\Internship CLIDE\\Transliteration_flask\\static\\saved_files\\" + file.filename,'rb') #pdf files with images are not allowed
-            Pdfreader = PyPDF2.PdfFileReader(f) #pdf reader object 
-            text = ""
-            for i in range(22,25):
-                page = Pdfreader.getPage(i)
-                text = text + page.extractText()
-            db.user.insert_one({'file_name': file.filename, 'content' : text}) 
-            f.close()
+            # f = open("C:\\Users\\ap888\\Desktop\\Internship CLIDE\\Transliteration_flask\\static\\saved_files\\" + file.filename,'rb') #pdf files with images are not allowed
+            # Pdfreader = PyPDF2.PdfFileReader(f) #pdf reader object 
+            # text = ""
+            # for i in range(0):
+            #     page = Pdfreader.getPage(i)
+            #     text = text + page.extractText()
+            # db.user.insert_one({'file_name': file.filename, 'content' : text}) 
+            # f.close()
+            images = convert_from_path('C:\\Users\\ap888\\Desktop\\Internship CLIDE\\Transliteration_flask\\static\\saved_files\\" + file.filename')
+            flash(images)
         elif '.' in filename and filename.rsplit('.', 1)[1].lower() == "txt":
                 f = open("C:\\Users\\ap888\\Desktop\\Internship CLIDE\\Transliteration_flask\\static\\saved_files\\" + file.filename,'r',encoding = 'utf-8') #if the file is text file
                 text = f.read()   #read the entire content, it tet should be UTF-8 text
@@ -98,7 +107,7 @@ def upload():
 def search():
     if request.method == "POST":
         user_serach = request.form["user_search"]
-        return user_serach + " wait seraching..." 
+        return(transliterate(user_serach, sanscript.ITRANS, sanscript.DEVANAGARI)) 
     else:
         return redirect('/')
    
