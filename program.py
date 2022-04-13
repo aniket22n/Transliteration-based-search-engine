@@ -2,6 +2,7 @@ from distutils.command.config import LANG_EXT
 from flask import Flask, jsonify, render_template, redirect, url_for, request, flash, json
 # from flask_mongoengine import MongoEngine
 from flask_pymongo import PyMongo
+from numpy import imag
 from pymongo import MongoClient
 
 from werkzeug.utils import secure_filename
@@ -13,10 +14,18 @@ import PIL
 from PIL import Image, ImageDraw
 import spacy
 import pytesseract as pt
-from pdf2image import convert_from_path
+from pdf2image import convert_from_path, convert_from_bytes
+
+from pdf2image.exceptions import (
+    PDFInfoNotInstalledError,
+    PDFPageCountError,
+    PDFSyntaxError
+)
 
 from indic_transliteration import sanscript
 from indic_transliteration.sanscript import transliterate
+
+from elt import translit
 # import easyocr
 # import cv2 as cv
 #import urllib.request
@@ -50,6 +59,9 @@ def allowed_file(filename):  # This function is used to check file extenstion
 # class User(db.Document): #database 
 #     file_name = db.StringField()
 
+#specifying the path of tesseract / it can also be dont using environment variable
+pt.pytesseract.tesseract_cmd = r'C:\Users\ap888\Desktop\Internship CLIDE\Transliteration_flask\env\Tesseract.exe'  
+
 @program.route('/') #main page http://127.0.0.1:5000/
 def index():
     return render_template('upload.html')
@@ -68,23 +80,29 @@ def upload():
         if '.' in filename and filename.rsplit('.', 1)[1].lower() == "pdf": #checking whether the  file is pdf or not  
             # f = open("C:\\Users\\ap888\\Desktop\\Internship CLIDE\\Transliteration_flask\\static\\saved_files\\" + file.filename,'rb') #pdf files with images are not allowed
             # Pdfreader = PyPDF2.PdfFileReader(f) #pdf reader object 
-            # text = ""
-            # for i in range(0):
+            # for i in range(0, Pdfreader.getNumPages()):
             #     page = Pdfreader.getPage(i)
+            #     image = convert_from_path(page)
+            #     flash(image)
             #     text = text + page.extractText()
             # db.user.insert_one({'file_name': file.filename, 'content' : text}) 
             # f.close()
-            images = convert_from_path('C:\\Users\\ap888\\Desktop\\Internship CLIDE\\Transliteration_flask\\static\\saved_files\\" + file.filename')
-            flash(images)
+            #poppler_path = r'C:\Program Files\poppler-0.68.0\bin'
+            images = convert_from_path("C:\\Users\\ap888\\Desktop\\Internship CLIDE\\Transliteration_flask\\static\\saved_files\\" + file.filename)
+            text = " "
+            for i in range(len(images)):
+                text = text + pt.image_to_string(images[i], lang="hin")
+            db.user.insert_one({'file_name': file.filename, 'content' : text})
+
         elif '.' in filename and filename.rsplit('.', 1)[1].lower() == "txt":
                 f = open("C:\\Users\\ap888\\Desktop\\Internship CLIDE\\Transliteration_flask\\static\\saved_files\\" + file.filename,'r',encoding = 'utf-8') #if the file is text file
                 text = f.read()   #read the entire content, it tet should be UTF-8 text
                 db.user.insert_one({'file_name': file.filename, 'content' : text}) #insert content into database
                 f.close()
+
         else: # if file is image file
-            pt.pytesseract.tesseract_cmd = r'C:\Users\ap888\Desktop\Internship CLIDE\Transliteration_flask\env\Tesseract.exe' #specifying the path of tesseract / it can also be dont using environment variable 
             img = Image.open("C:\\Users\\ap888\\Desktop\\Internship CLIDE\\Transliteration_flask\\static\\saved_files\\" + file.filename)
-            text = pt.image_to_string(img, lang="hin") #only working for hindi language
+            text = pt.image_to_string(img, lang="hin") #only for hindi language
             db.user.insert_one({'file_name': file.filename, 'content' : text})
 
         #    db.user.insert(text_file_doc)
@@ -96,18 +114,14 @@ def upload():
     return redirect('/')    
 
 
-
-
-
-
-
-
 # This fucntion is used to get input value from user
 @program.route("/search", methods=["POST", "GET"])
 def search():
     if request.method == "POST":
         user_serach = request.form["user_search"]
-        return(transliterate(user_serach, sanscript.ITRANS, sanscript.DEVANAGARI)) 
+        to_hindi = translit('hindi')
+        output = to_hindi.convert([user_serach])
+        return output[0]
     else:
         return redirect('/')
    
