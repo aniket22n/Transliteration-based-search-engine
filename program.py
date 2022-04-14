@@ -1,4 +1,3 @@
-from distutils.command.config import LANG_EXT
 from flask import Flask, jsonify, render_template, redirect, url_for, request, flash, json
 # from flask_mongoengine import MongoEngine
 from flask_pymongo import PyMongo
@@ -26,6 +25,7 @@ from indic_transliteration import sanscript
 from indic_transliteration.sanscript import transliterate
 
 from elt import translit
+import transliterate
 # import easyocr
 # import cv2 as cv
 #import urllib.request
@@ -117,13 +117,19 @@ def upload():
 # This fucntion is used to get input value from user
 @program.route("/search", methods=["POST", "GET"])
 def search():
+    #Can be found by inspecting http response of google input tools page
+    lang = {'hindi':"hi-t-i0-und"}
     if request.method == "POST":
         user_serach = request.form["user_search"]
-        to_hindi = translit('hindi')
-        output = to_hindi.convert([user_serach])
-        return output[0]
+        output = transliterate.driver(user_serach, lang['hindi'])
+        return output
     else:
         return redirect('/')
-   
+
+@program.route("/temp")
+def temp():
+    for doc in collection.find():
+        return doc["content"]
+
 if __name__ == '__main__':
     program.run(debug=True)
