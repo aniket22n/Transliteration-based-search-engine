@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %} Result {% endblock %}
+{% block content %}
+
+<h1>{{searching_for }} is found in below files..</h1>
+
+{% for key, value in file_names %}
+    <h1> {{key}} : {{value}}% matching</h1>
+{% endfor %}
+
+{% endblock %}

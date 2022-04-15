@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, render_template, redirect, url_for, request, flash, json
 # from flask_mongoengine import MongoEngine
 from flask_pymongo import PyMongo
-from numpy import imag
+from numpy import imag, result_type
 from pymongo import MongoClient
 
 from werkzeug.utils import secure_filename
@@ -26,6 +26,8 @@ from indic_transliteration.sanscript import transliterate
 
 from elt import translit
 import transliterate
+
+from thefuzz import fuzz, process
 # import easyocr
 # import cv2 as cv
 #import urllib.request
@@ -122,14 +124,25 @@ def search():
     if request.method == "POST":
         user_serach = request.form["user_search"]
         output = transliterate.driver(user_serach, lang['hindi'])
-        return output
+        return redirect(url_for("temp", search = output))
     else:
         return redirect('/')
 
-@program.route("/temp")
-def temp():
+@program.route("/<search>")
+def temp(search):
+    # search_list = []
+    # for x in search.split(" "):
+    #     if x != "":
+    #         search_list.append(x)
+
+    result = {}
     for doc in collection.find():
-        return doc["content"]
+        res = process.extract(search, doc["content"].split("\n"))
+        accuracy = fuzz.partial_ratio(res[0][0],search)
+        if accuracy > 20:
+            result[doc["file_name"]] = accuracy
+    sort_result = sorted(result.items(), key=lambda x: x[1], reverse=True)
+    return render_template('result.html', file_names = sort_result, searching_for = search)
 
 if __name__ == '__main__':
     program.run(debug=True)
