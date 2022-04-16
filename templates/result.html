@@ -2,10 +2,32 @@
 {% block title %} Result {% endblock %}
 {% block content %}
 
-<h1>{{searching_for }} is found in below files..</h1>
+<p><h1 class="tran">Hindi Transliteration : {{searching_for }}</h1></p>
+<br>
+<br>
 
+<h1 class="tran">{{number}} Files found... </h1>
+<br>
+
+<table>
+<tr>
+    <th>Serial number</th>
+    <th>File Name</th>
+    <th>Matching</th>
+    <th>Matching Content</th>
+  </tr>
 {% for key, value in file_names %}
-    <h1> {{key}} : {{value}}% matching</h1>
+    <tr>
+        <td>{{loop.index}}</td>
+        <td>{{key}}</td>
+        <td>{{value}}</td>
+        {% if value > 90 %}
+            <td>{{content[loop.index]}}</td>
+        {% else %}
+            <td>----</td>
+        {% endif %}
+      </tr>
 {% endfor %}
+</table>
 
 {% endblock %}

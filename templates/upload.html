@@ -2,32 +2,49 @@
 {% block title %} Home Page {% endblock %}
 {% block content %}
 
-
 <!-- flashing message -->
 <p>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    {% for message_to_be_flashed in messages %}
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message_to_be_flashed in messages %}
 <div class="alert alert-primary">
-    <strong>{{ message_to_be_flashed }}</strong>
+  <h1 class="flash"><strong>{{ message_to_be_flashed }}</strong></h1>
 </div>
 {% endfor %}
 {% endif %}
 {% endwith %}
 </p>
 
+   
 <!-- file input -->
+<div class = "upload-btn-wrapper">
 <form method="post" action="/upload" enctype="multipart/form-data">
+    <h1 class="ins">Please select a file...</h1>
     <!-- <p>File Name : <input type="text" name="txtusername" value="" placeholder="Enter file name" required> </p>  -->
-    <p><input type="file" name="inputFile" autocomplete="off" required></p>
-    <p><input type="submit" value="Submit"></p>
+    <input class="file_selecting" type="file" name="inputFile" autocomplete="off" required/>
+    <button class="btn">Upload a file</button>
 </form>
+</div>
+
+
 
 <!-- searching -->
+<div class="container-sm mt-4 centered"></div>
 <form action="/search" method="post">
-  <p><input type="text" name="user_search" /></p>
-  <p><input type="submit" value="Search" /></p>
+  <h1 class="ins">Please serach here...</h1>
+  <input type="text" name="user_search" class="form-control rounded"/>
+  <input type="submit" value="Search" class="btn btn-primary"/>
 </form>
+</div>
+
+<!-- resulted files -->
+{%if searching_for%}
+<h1 class="flash">Hindi Transliteration : {{searching_for }}</h1>
+
+<!-- {% for key, value in file_names %}
+    <h1 class="flash"> {{key}} : {{value}}% matching</h1>
+{% endfor %} -->
+{%endif %} 
 
 <!-- on change event for file is removed  -->
 <!-- <script>

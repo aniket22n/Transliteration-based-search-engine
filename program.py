@@ -108,7 +108,7 @@ def upload():
             db.user.insert_one({'file_name': file.filename, 'content' : text})
 
         #    db.user.insert(text_file_doc)
-        flash('File successfully uploaded ' + file.filename + ' to the database!') # flash message 
+        flash(file.filename + '  is successfully uploaded to the database!') # flash message 
         #    file_names = db.user.find()
         return redirect('/') # redirect of main page
     else:
@@ -134,15 +134,16 @@ def temp(search):
     # for x in search.split(" "):
     #     if x != "":
     #         search_list.append(x)
-
+    matching_content = []
     result = {}
     for doc in collection.find():
         res = process.extract(search, doc["content"].split("\n"))
-        accuracy = fuzz.partial_ratio(res[0][0],search)
+        accuracy = fuzz.partial_ratio(res[0],search)
         if accuracy > 20:
             result[doc["file_name"]] = accuracy
+            matching_content.append(res[0][0])
     sort_result = sorted(result.items(), key=lambda x: x[1], reverse=True)
-    return render_template('result.html', file_names = sort_result, searching_for = search)
+    return render_template('result.html', file_names = sort_result, searching_for = search, number=len(sort_result), content = matching_content)
 
 if __name__ == '__main__':
     program.run(debug=True)
