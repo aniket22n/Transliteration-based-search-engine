@@ -1,3 +1,4 @@
+from cgitb import reset
 from flask import Flask, jsonify, render_template, redirect, url_for, request, flash, json
 # from flask_mongoengine import MongoEngine
 from flask_pymongo import PyMongo
@@ -140,19 +141,26 @@ def temp(search):
     matching_content = {}
     result = {}
     for doc in collection.find():
-        res = process.extract(search, doc["content"].split("\n"),scorer=fuzz.partial_ratio)
+        doc_content = doc["content"].split("\n")
+        for x in doc_content:
+            if len(x) < len(search):
+                doc_content.remove(x)
+        res = process.extract(search, doc_content,scorer=fuzz.partial_ratio)
+        for x in res:
+            if len(x[0]) < len(search):
+                res.remove(x)
         best_sub_res = {}
         for sub_res in res:
             count = 0
             for x in search_list:
-                if fuzz.partial_ratio(sub_res[0],x) == 100:
+                if x in sub_res[0]:
                     count += 1
             best_sub_res[sub_res[0]] = count
-        sort_best_sub_res = sorted(best_sub_res.items(), key=lambda x: x[1], reverse=True)
-        accuracy = fuzz.partial_ratio(sort_best_sub_res[0][0],search)
-        if accuracy > 20:
-            result[doc["file_name"]] = accuracy
-            matching_content[doc["file_name"]] = sort_best_sub_res[0][0]
+            sort_best_sub_res = sorted(best_sub_res.items(), key=lambda x: x[1], reverse=True)
+            accuracy = fuzz.partial_ratio(sort_best_sub_res[0][0],search)
+            if accuracy > 20:
+                result[doc["file_name"]] = accuracy
+                matching_content[doc["file_name"]] = sort_best_sub_res[0][0]
     sort_result = sorted(result.items(), key=lambda x: x[1], reverse=True)
     return render_template('result.html', file_names = sort_result, searching_for = search, number=len(sort_result), content = matching_content)
 
