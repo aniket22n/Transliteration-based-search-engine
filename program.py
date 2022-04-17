@@ -27,7 +27,10 @@ from indic_transliteration.sanscript import transliterate
 from elt import translit
 import transliterate
 
-from thefuzz import fuzz, process
+
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+# from thefuzz import fuzz, process
 # import easyocr
 # import cv2 as cv
 #import urllib.request
@@ -130,18 +133,26 @@ def search():
 
 @program.route("/<search>")
 def temp(search):
-    # search_list = []
-    # for x in search.split(" "):
-    #     if x != "":
-    #         search_list.append(x)
+    search_list = []
+    for x in search.split(" "):
+        if x != "":
+            search_list.append(x)
     matching_content = {}
     result = {}
     for doc in collection.find():
-        res = process.extract(search, doc["content"].split("\n"))
-        accuracy = fuzz.partial_ratio(res[0],search)
+        res = process.extract(search, doc["content"].split("\n"),scorer=fuzz.partial_ratio)
+        best_sub_res = {}
+        for sub_res in res:
+            count = 0
+            for x in search_list:
+                if fuzz.partial_ratio(sub_res[0],x) == 100:
+                    count += 1
+            best_sub_res[sub_res[0]] = count
+        sort_best_sub_res = sorted(best_sub_res.items(), key=lambda x: x[1], reverse=True)
+        accuracy = fuzz.partial_ratio(sort_best_sub_res[0][0],search)
         if accuracy > 20:
             result[doc["file_name"]] = accuracy
-            matching_content[doc["file_name"]] = res[0][0]
+            matching_content[doc["file_name"]] = sort_best_sub_res[0][0]
     sort_result = sorted(result.items(), key=lambda x: x[1], reverse=True)
     return render_template('result.html', file_names = sort_result, searching_for = search, number=len(sort_result), content = matching_content)
 
