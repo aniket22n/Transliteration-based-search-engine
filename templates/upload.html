@@ -31,20 +31,19 @@
 <!-- searching -->
 <div class="container-sm mt-4 centered"></div>
 <form action="/search" method="post">
-  <h1 class="ins">Please serach here...</h1>
+  <h1 class="ins">Please search here...</h1>
   <input type="text" name="user_search" class="form-control rounded"/>
   <input type="submit" value="Search" class="btn btn-primary"/>
 </form>
 </div>
-
 <!-- resulted files -->
-{%if searching_for%}
+<!-- {%if searching_for%}
 <h1 class="flash">Hindi Transliteration : {{searching_for }}</h1>
 
-<!-- {% for key, value in file_names %}
+{% for key, value in file_names %}
     <h1 class="flash"> {{key}} : {{value}}% matching</h1>
-{% endfor %} -->
-{%endif %} 
+{% endfor %}
+{%endif %}  -->
 
 <!-- on change event for file is removed  -->
 <!-- <script>

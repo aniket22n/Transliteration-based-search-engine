@@ -18,11 +18,11 @@
   </tr>
 {% for key, value in file_names %}
     <tr>
-        <td>{{loop.index}}</td>
-        <td>{{key}}</td>
-        <td>{{value}}</td>
+        <td>{{loop.index}}</td>     <!-- Serial Number -->
+        <td>{{key}}</td>            <!-- file name -->
+        <td>{{value}} %</td>        <!-- matching accuracy -->
         {% if value > 90 %}
-            <td>{{content[loop.index]}}</td>
+            <td>{{content[key]}}</td>       <!-- matching content -->
         {% else %}
             <td>----</td>
         {% endif %}

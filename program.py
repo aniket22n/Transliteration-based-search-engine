@@ -123,7 +123,7 @@ def search():
     lang = {'hindi':"hi-t-i0-und"}
     if request.method == "POST":
         user_serach = request.form["user_search"]
-        output = transliterate.driver(user_serach, lang['hindi'])
+        output = transliterate.driver(user_serach.strip(), lang['hindi'])
         return redirect(url_for("temp", search = output))
     else:
         return redirect('/')
@@ -134,14 +134,14 @@ def temp(search):
     # for x in search.split(" "):
     #     if x != "":
     #         search_list.append(x)
-    matching_content = []
+    matching_content = {}
     result = {}
     for doc in collection.find():
         res = process.extract(search, doc["content"].split("\n"))
         accuracy = fuzz.partial_ratio(res[0],search)
         if accuracy > 20:
             result[doc["file_name"]] = accuracy
-            matching_content.append(res[0][0])
+            matching_content[doc["file_name"]] = res[0][0]
     sort_result = sorted(result.items(), key=lambda x: x[1], reverse=True)
     return render_template('result.html', file_names = sort_result, searching_for = search, number=len(sort_result), content = matching_content)
 
