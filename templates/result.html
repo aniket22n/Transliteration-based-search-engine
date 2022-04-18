@@ -2,32 +2,42 @@
 {% block title %} Result {% endblock %}
 {% block content %}
 
-<p><h1 class="tran">Hindi Transliteration : {{searching_for }}</h1></p>
+<p>
+<h1 class="tran">Hindi Transliteration : {{searching_for }}</h1>
+</p>
 <br>
 <br>
-
+{% if number%}
 <h1 class="tran">{{number}} Files found... </h1>
 <br>
 
 <table>
-<tr>
-    <th>Serial number</th>
-    <th>File Name</th>
-    <th>Matching</th>
-    <th>Matching Content</th>
-  </tr>
-{% for key, value in file_names %}
     <tr>
-        <td>{{loop.index}}</td>     <!-- Serial Number -->
-        <td>{{key}}</td>            <!-- file name -->
-        <td>{{value}} %</td>        <!-- matching accuracy -->
-        {% if value >= 50 %}
-            <td>{{content[key]}}</td>       <!-- matching content -->
+        <th>Serial number</th>
+        <th>File Name</th>
+        <th>Matching</th>
+        <th>Matching Content</th>
+    </tr>
+    {% for key, value in file_names %}
+    <tr>
+        <td>{{loop.index}}</td> <!-- Serial Number -->
+        <td>{{key}}</td> <!-- file name -->
+        <td>{{value}} %</td> <!-- matching accuracy -->
+        {% if value >= 70 %}
+        <td>{{content[key]}}</td> <!-- matching content -->
         {% else %}
-            <td>----</td>
+        <td>----</td>
         {% endif %}
-      </tr>
-{% endfor %}
+    </tr>
+    {% endfor %}
 </table>
+
+{% else %}
+<br>
+<br>
+<br>
+<br>
+<h1 class="tran2">No files matching the text pattern </h1>
+{% endif %}
 
 {% endblock %}

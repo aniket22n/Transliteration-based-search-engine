@@ -46,8 +46,12 @@ body {
 
 .tran{
     color: white;
-   
 }
+
+.tran2{
+  color: rgb(220, 131, 131);
+}
+
 .flash{
     color: beige;
 }
