@@ -21,7 +21,7 @@
         <td>{{loop.index}}</td>     <!-- Serial Number -->
         <td>{{key}}</td>            <!-- file name -->
         <td>{{value}} %</td>        <!-- matching accuracy -->
-        {% if value > 90 %}
+        {% if value >= 50 %}
             <td>{{content[key]}}</td>       <!-- matching content -->
         {% else %}
             <td>----</td>

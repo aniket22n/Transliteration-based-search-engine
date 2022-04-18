@@ -155,10 +155,12 @@ def temp(search):
             for x in search_list:
                 if x in sub_res[0]:
                     count += 1
-            best_sub_res[sub_res[0]] = count
+            if count >= len(search_list) - (len(search_list) // 2):
+                best_sub_res[sub_res[0]] = count
+        if best_sub_res: 
             sort_best_sub_res = sorted(best_sub_res.items(), key=lambda x: x[1], reverse=True)
             accuracy = fuzz.partial_ratio(sort_best_sub_res[0][0],search)
-            if accuracy > 20:
+            if accuracy > 40:
                 result[doc["file_name"]] = accuracy
                 matching_content[doc["file_name"]] = sort_best_sub_res[0][0]
     sort_result = sorted(result.items(), key=lambda x: x[1], reverse=True)
