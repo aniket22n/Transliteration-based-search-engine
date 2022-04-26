@@ -6,15 +6,14 @@ from pymongo import MongoClient
 
 from werkzeug.utils import secure_filename
 import os
-import PyPDF2
-from PyPDF2 import PdfFileReader
 
 import PIL 
 from PIL import Image, ImageDraw
-import spacy
-import pytesseract as pt
-from pdf2image import convert_from_path, convert_from_bytes
+# import spacy
 
+import pytesseract as pt
+
+from pdf2image import convert_from_path, convert_from_bytes
 from pdf2image.exceptions import (
     PDFInfoNotInstalledError,
     PDFPageCountError,
@@ -103,13 +102,13 @@ def search():
     lang = {'hindi':"hi-t-i0-und"}
     if request.method == "POST":
         user_serach = request.form["user_search"]
-        output = transliterate.driver(user_serach.strip(), lang['hindi'])
-        return redirect(url_for("temp", search = output))
+        output = transliterate.transliteration(user_serach.strip(), lang['hindi'])
+        return redirect(url_for("transliteration_search", search = output))
     else:
         return redirect('/')
 
 @program.route("/<search>")
-def temp(search):
+def transliteration_search(search):
     search_list = []
     for x in search.split(" "):
         if x != "":

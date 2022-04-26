@@ -1,5 +1,4 @@
 import http.client
-import json
 
 def request(input, lang):
     conn = http.client.HTTPSConnection('inputtools.google.com')
@@ -7,7 +6,7 @@ def request(input, lang):
     res = conn.getresponse()
     return res
 
-def driver(input, lang):
+def transliteration(input, lang):
     output = ''
     if ' ' in input:
         input = input.split(' ')
