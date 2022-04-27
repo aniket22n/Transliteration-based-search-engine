@@ -36,23 +36,5 @@
   <input type="submit" value="Search" class="btn btn-primary"/>
 </form>
 </div>
-<!-- resulted files -->
-<!-- {%if searching_for%}
-<h1 class="flash">Hindi Transliteration : {{searching_for }}</h1>
 
-{% for key, value in file_names %}
-    <h1 class="flash"> {{key}} : {{value}}% matching</h1>
-{% endfor %}
-{%endif %}  -->
-
-<!-- on change event for file is removed  -->
-<!-- <script>
-  var loadFile = function(event) {
-    var output = document.getElementById('output');
-    output.src = URL.createObjectURL(event.target.files[0]);
-    output.onload = function() {
-      URL.revokeObjectURL(output.src) 
-    }
-  };
-</script> -->
 {% endblock %}
