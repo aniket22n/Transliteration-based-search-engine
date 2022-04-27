@@ -3,7 +3,7 @@
 
 - Upload some files( pdf/ text/ image) which contain Hindi text then that text will be extracted using OCR ( optical character recognition ) tool and stored in the database.
 ```bash
-        Mongodb is used to store file data, for every file it will create new document with two fields 
+        Mongodb is used to store file data, For every file it will create new document with two fields 
         1. file_name - to store name of the file  2. content - to store content of the file
 ``` 
 
@@ -30,8 +30,24 @@
 - Install [Jinja2](https://pypi.org/project/Jinja2/) / In VisualStudio add jinja2 extension 
 
 
-## demonstration 
+## Demonstration 
 
 https://user-images.githubusercontent.com/69907734/165500878-51d08ef1-6512-4cf7-9170-198f7e227c9c.mp4
 
+
+## Work-flow of system
+
+![Transliteration Based Search Engine Flowchart (1)](https://user-images.githubusercontent.com/69907734/165507103-64162c94-9825-40b2-8f16-c0cb8e4eed7e.jpg)
+
+
+## Reference
+
+- https://inltk.readthedocs.io/en/latest/index.html
+- https://kb.objectrocket.com/mongo-db/how-to-access-and-parse-mongodb-documents-in-python-364#:~:text=a%20MongoDB%20collection-,Use%20Python's%20list()%20function%20to%20return%20a%20list%20of,call%20into%20the%20list%20call
+- https://www.geeksforgeeks.org/convert-pdf-to-image-using-python/ 
+- https://github.com/Belval/pdf2image#readme
+- https://medium.com/@akshit_29/optical-character-recognition-ocr-for-the-hindi-language-single-multiple-files-8f60ca2bfc06
+- https://github.com/UB-Mannheim/tesseract/wiki
+- https://www.kaggle.com/code/salonikalra/transliterate-using-http-google-input-tools/script
+- https://cran.r-project.org/web/packages/fuzzywuzzyR/fuzzywuzzyR.pdf
 
