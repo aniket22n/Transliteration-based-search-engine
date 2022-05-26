@@ -24,8 +24,9 @@
 - Install [python flask](https://pypi.org/project/Flask/)  
 - download [mongodb Database](https://www.mongodb.com/try/download/community)  & [Install pymongo](https://pypi.org/project/pymongo/)  
 - Install [python Imaging Library](https://pypi.org/project/Pillow/)  
-- Download and install  [Tesseract OCR](https://medium.com/@akshit_29/optical-character-recognition-ocr-for-the-hindi-language-single-multiple-files-8f60ca2bfc06) and set path Environment variable
+- Download and install  [Tesseract OCR](https://medium.com/@akshit_29/optical-character-recognition-ocr-for-the-hindi-language-single-multiple-files-8f60ca2bfc06) and add path to Environment variable.
 - Install [pdf2image](https://pypi.org/project/pdf2image/) / you can use this document also [pdf2image](https://www.geeksforgeeks.org/convert-pdf-to-image-using-python/) by  GFG
+- Install [latest version of poppler](https://blog.alivate.com.au/poppler-windows/) then extract into C:\programm files, and add path to system environment 'C:\Program Files\[poppler folder]\bin'. 
 - Install [fuzzywuzzy](https://pypi.org/project/fuzzywuzzy/)
 - Install [Jinja2](https://pypi.org/project/Jinja2/) / In VisualStudio add jinja2 extension 
 
